@@ -7,20 +7,8 @@
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="/">Strona główna <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('fos_user_security_login') }}">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('fos_user_registration_register') }}">Register</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('fos_user_profile_show') }}">Profile</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('fos_user_security_logout') }}">Logout</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('artist_index') }}">Wykonawcy</a>
@@ -36,5 +24,24 @@
             <input class="form-control mr-sm-2" type="search" placeholder="Wyszukaj..." aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Szukaj</button>
         </form>
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('fos_user_security_login') }}">Logowanie</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('fos_user_registration_register') }}">Rejestracja</a>
+                </li>
+            {% endif %}
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('fos_user_profile_show') }}">{{ app.user.username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('fos_user_security_logout') }}">Wyloguj</a>
+                </li>
+            {% endif %}
+        </ul>
     </div>
 </nav>
