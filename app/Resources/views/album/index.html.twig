@@ -1,43 +1,27 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Albumy - MusicRate{% endblock %}
 {% block body %}
-    <h1>Albums list</h1>
+    <h1>Albumy</h1>
 
     <table>
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Tracklist</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Nazwa</th>
+        </tr>
         </thead>
         <tbody>
         {% for album in albums %}
             <tr>
-                <td><a href="{{ path('album_show', { 'id': album.id }) }}">{{ album.id }}</a></td>
-                <td>{{ album.name }}</td>
-                <td>{{ album.description }}</td>
-                <td>{% if album.tracklist %}{{ album.tracklist|join(', ') }}{% endif %}</td>
                 <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('album_show', { 'id': album.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('album_edit', { 'id': album.id }) }}">edit</a>
-                        </li>
-                    </ul>
+                    <a href="{{ path('album_show', { 'id': album.id }) }}">
+                        {{ album.artist.name }} - {{ album.name }}
+                    </a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('album_new') }}">Create a new album</a>
-        </li>
-    </ul>
+
 {% endblock %}

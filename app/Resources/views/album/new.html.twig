@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Nowy album - MusicRate{% endblock %}
 {% block body %}
-    <h1>Album creation</h1>
+    <h4>Nowy album</h4>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
+        <input type="submit" value="Dodaj" class="btn btn-primary" />
     {{ form_end(form) }}
 
     <ul>

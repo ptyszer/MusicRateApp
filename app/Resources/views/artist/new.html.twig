@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Nowy artysta - MusicRate{% endblock %}
 {% block body %}
     <h1>Artist creation</h1>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+        <input type="submit" value="Dodaj" class="btn btn-primary" />
     {{ form_end(form) }}
 
     <ul>

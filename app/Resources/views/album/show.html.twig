@@ -1,25 +1,34 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} {{ album.name }} - MusicRate{% endblock %}
 {% block body %}
-    <h1>Album</h1>
+    <h1>{{ album.name }}</h1>
 
     <table>
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ album.id }}</td>
+                <th>Wykonawca: </th>
+                <td>
+                    <a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
+                    {{ album.artist.name }}
+                    </a>
+                </td>
             </tr>
             <tr>
-                <th>Name</th>
-                <td>{{ album.name }}</td>
+                <th>Data wydania: </th>
+                <td>{{ album.releaseDate.format("d.m.Y") }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Opis: </th>
                 <td>{{ album.description }}</td>
             </tr>
             <tr>
-                <th>Tracklist</th>
-                <td>{% if album.tracklist %}{{ album.tracklist|join(', ') }}{% endif %}</td>
+                <th>Gatunki: </th>
+                <td>{% if album.genres %}
+                        {% for genre in album.genres %}
+                            <a href="{{ path('genre_show', { "id" : genre.id}) }}">{{ genre.name }}</a>
+                        {% endfor %}
+                    {% endif %}</td>
             </tr>
         </tbody>
     </table>
@@ -28,13 +37,23 @@
         <li>
             <a href="{{ path('album_index') }}">Back to the list</a>
         </li>
-        <li>
-            <a href="{{ path('album_edit', { 'id': album.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
+        {% if is_granted('ROLE_ADMIN') %}
+            <li>
+                <a href="{{ path('album_edit', { 'id': album.id }) }}">Edytuj</a>
+            </li>
+            {% if not album.approved %}
+            <li>
+                {{ form_start(approved_form) }}
+                <input type="submit" value="Zatwierdź" class="btn btn-outline-success btn-sm" />
+                {{ form_end(approved_form) }}
+            </li>
+            {% endif %}
+            <li>
+                {{ form_start(delete_form) }}
+                <input type="submit" value="Usuń" class="btn btn-outline-danger btn-sm" />
+                {{ form_end(delete_form) }}
+            </li>
+        {% endif %}
+
     </ul>
 {% endblock %}

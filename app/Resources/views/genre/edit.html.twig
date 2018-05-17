@@ -1,20 +1,28 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Edycja - MusicRate{% endblock %}
 {% block body %}
     <h1>Genre edit</h1>
 
     {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
+        <input type="submit" value="Edytuj" class="btn btn-primary"/>
     {{ form_end(edit_form) }}
 
     <ul>
         <li>
             <a href="{{ path('genre_index') }}">Back to the list</a>
         </li>
+        {% if not genre.approved %}
+            <li>
+                {{ form_start(approved_form) }}
+                <input type="submit" value="Zatwierdź" class="btn btn-outline-success btn-sm" />
+                {{ form_end(approved_form) }}
+            </li>
+        {% endif %}
         <li>
             {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
+            <input type="submit" value="Usuń" class="btn btn-outline-danger btn-sm" />
             {{ form_end(delete_form) }}
         </li>
     </ul>
