@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Artist;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +37,7 @@ class ArtistController extends Controller
      *
      * @Route("/new", name="artist_new")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_USER')")
      */
     public function newAction(Request $request)
     {
@@ -66,10 +68,12 @@ class ArtistController extends Controller
     public function showAction(Artist $artist)
     {
         $deleteForm = $this->createDeleteForm($artist);
+        $approvedForm = $this->createApprovedForm($artist);
 
         return $this->render('artist/show.html.twig', array(
             'artist' => $artist,
             'delete_form' => $deleteForm->createView(),
+            'approved_form' => $approvedForm->createView(),
         ));
     }
 
@@ -78,10 +82,12 @@ class ArtistController extends Controller
      *
      * @Route("/{id}/edit", name="artist_edit")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editAction(Request $request, Artist $artist)
     {
         $deleteForm = $this->createDeleteForm($artist);
+        $approvedForm = $this->createDeleteForm($artist);
         $editForm = $this->createForm('AppBundle\Form\ArtistType', $artist);
         $editForm->handleRequest($request);
 
@@ -95,6 +101,7 @@ class ArtistController extends Controller
             'artist' => $artist,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'approved_form' => $approvedForm->createView(),
         ));
     }
 
@@ -103,6 +110,7 @@ class ArtistController extends Controller
      *
      * @Route("/{id}", name="artist_delete")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteAction(Request $request, Artist $artist)
     {
@@ -112,6 +120,26 @@ class ArtistController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($artist);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('artist_index');
+    }
+
+    /**
+     *
+     * @Route("/{id}", name="artist_approved")
+     * @Method("PATCH")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function approvedAction(Request $request, Artist $artist){
+        $form = $this->createApprovedForm($artist);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $artist->setApproved();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($artist);
             $em->flush();
         }
 
@@ -132,5 +160,21 @@ class ArtistController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Creates a form to approved a artist entity.
+     *
+     * @param Artist $artist The artist entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createApprovedForm(Artist $artist)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('artist_approved', array('id' => $artist->getId())))
+            ->setMethod('PATCH')
+            ->getForm()
+            ;
     }
 }
