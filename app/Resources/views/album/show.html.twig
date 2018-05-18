@@ -1,59 +1,82 @@
 {% extends 'base.html.twig' %}
 
 {% block title %} {{ album.name }} - MusicRate{% endblock %}
-{% block body %}
-    <h1>{{ album.name }}</h1>
+{% block container %}
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Wykonawca: </th>
-                <td>
-                    <a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
-                    {{ album.artist.name }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <th>Data wydania: </th>
-                <td>{{ album.releaseDate.format("d.m.Y") }}</td>
-            </tr>
-            <tr>
-                <th>Opis: </th>
-                <td>{{ album.description }}</td>
-            </tr>
-            <tr>
-                <th>Gatunki: </th>
-                <td>{% if album.genres %}
-                        {% for genre in album.genres %}
-                            <a href="{{ path('genre_show', { "id" : genre.id}) }}">{{ genre.name }}</a>
-                        {% endfor %}
-                    {% endif %}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ album.name }}</h5>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Wykonawca: </th>
+                    <td>
+                        <a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
+                        {{ album.artist.name }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Data wydania: </th>
+                    <td>{{ album.releaseDate.format("d.m.Y") }}</td>
+                </tr>
+                <tr>
+                    <th>Opis: </th>
+                    <td>{{ album.description }}</td>
+                </tr>
+                <tr>
+                    <th>Gatunki: </th>
+                    <td>{% if album.genres %}
+                            {% for genre in album.genres %}
+                                <a href="{{ path('genre_show', { "id" : genre.id}) }}">{{ genre.name }}</a>
+                            {% endfor %}
+                        {% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Ocena: </th>
+                    <td>
+                        {% if album.reviews %}
+                            {{ album.averageRating|round(2) }}
+                            (głosów: {{ album.reviews.count }})
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('album_index') }}">Back to the list</a>
-        </li>
         {% if is_granted('ROLE_ADMIN') %}
-            <li>
-                <a href="{{ path('album_edit', { 'id': album.id }) }}">Edytuj</a>
-            </li>
-            {% if not album.approved %}
-            <li>
-                {{ form_start(approved_form) }}
-                <input type="submit" value="Zatwierdź" class="btn btn-outline-success btn-sm" />
-                {{ form_end(approved_form) }}
-            </li>
-            {% endif %}
-            <li>
-                {{ form_start(delete_form) }}
-                <input type="submit" value="Usuń" class="btn btn-outline-danger btn-sm" />
-                {{ form_end(delete_form) }}
-            </li>
+            <a href="{{ path('album_edit', { 'id': album.id }) }}" class="card-link">Edytuj</a>
         {% endif %}
 
-    </ul>
+
+        <p>Twoja opinia:</p>
+        {{ form_start(review_form) }}
+        <div class="form-group">
+            {{ form_label(review_form.rating, 'Ocena', {'label_attr': {'class': 'bmd-label-static'}}) }}
+            {{ form_errors(review_form.rating) }}
+            {{ form_widget(review_form.rating, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(review_form.comment, 'Komentarz', {'label_attr': {'class': 'bmd-label-static'}}) }}
+            {{ form_errors(review_form.comment) }}
+            {{ form_widget(review_form.comment, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <input type="submit" value="Dodaj" class="btn btn-primary btn-raised" />
+        {{ form_end(review_form) }}
+
+        {#rewievs#}
+        {% for review in album.reviews %}
+            <ul class="list-group bmd-list-group-sm">
+                <li class="list-group-item">
+                    <div class="bmd-list-group-col">
+                        <p class="list-group-item-heading">Ocena: {{ review.rating }}, {{ review.comment }}</p>
+                        <p class="list-group-item-text">{{ review.user.username }}</p>
+                    </div>
+                </li>
+            </ul>
+        {% endfor %}
+
+    </div>
+</div>
+
 {% endblock %}

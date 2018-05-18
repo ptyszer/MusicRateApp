@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Albumy - MusicRate{% endblock %}
-{% block body %}
-    <h1>Albumy</h1>
+{% block container %}
+    <h4>Albumy</h4>
 
-    <table>
+    <table class="table">
         <thead>
         <tr>
-            <th>Nazwa</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Wykonawca</th>
         </tr>
         </thead>
         <tbody>
@@ -15,7 +16,12 @@
             <tr>
                 <td>
                     <a href="{{ path('album_show', { 'id': album.id }) }}">
-                        {{ album.artist.name }} - {{ album.name }}
+                        {{ album.name }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
+                        {{ album.artist.name }}
                     </a>
                 </td>
             </tr>

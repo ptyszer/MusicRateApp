@@ -1,17 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nowy gatunek muzyczny - MusicRate{% endblock %}
-{% block body %}
-    <h1>Genre creation</h1>
-
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Dodaj" class="btn btn-primary" />
-    {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('genre_index') }}">Back to the list</a>
-        </li>
-    </ul>
+{% block container %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Nowy gatunek:</h5>
+            {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_label(form.name, 'Nazwa', {'label_attr': {'class': 'bmd-label-static'}}) }}
+                {{ form_errors(form.name) }}
+                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.description, 'Opis', {'label_attr': {'class': 'bmd-label-static'}}) }}
+                {{ form_errors(form.description) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <input type="submit" value="Dodaj" class="btn btn-primary btn-raised" />
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}

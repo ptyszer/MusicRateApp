@@ -1,50 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ artist.name }} - MusicRate{% endblock %}
-{% block body %}
-    <h1>{{ artist.name }}</h1>
-    <p>{{ artist.description }}</p>
-    <h5>Albumy:</h5>
-    <ul>
-    {% for album in artist.albums %}
-        <li>
-            <a href="{{ path('album_show', { 'id': album.id }) }}">
-                {{ album.name }}
-            </a>
-        </li>
-    {% else %}
-        <i>Ten artysta nie ma jeszcze dodanych albumów...</i>
-    {% endfor %}
-    </ul>
+{% block container %}
 
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <ul>
-        <li>
-            <a href="{{ path('album_new', { 'artistId': artist.id }) }}">Dodaj nowy album</a>
-        </li>
-    </ul>
-    {% endif %}
-
-    <ul>
-        <li>
-            <a href="{{ path('artist_index') }}">Back to the list</a>
-        </li>
-        {% if is_granted('ROLE_ADMIN') %}
-            <li>
-                <a href="{{ path('artist_edit', { 'id': artist.id }) }}">Edytuj</a>
-            </li>
-            {% if not artist.approved %}
-                <li>
-                    {{ form_start(approved_form) }}
-                    <input type="submit" value="Zatwierdź" class="btn btn-outline-success btn-sm" />
-                    {{ form_end(approved_form) }}
-                </li>
+    <div class="card mb-3">
+        {#<img class="card-img-top" src=".../100px180/" alt="Card image cap">#}
+        <div class="card-body">
+            <h5 class="card-title">{{ artist.name }}</h5>
+            <p class="card-text">{{ artist.description }}</p>
+            {#<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>#}
+            {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('artist_edit', { 'id': artist.id }) }}" class="card-link">Edytuj</a>
             {% endif %}
-            <li>
-                {{ form_start(delete_form) }}
-                <input type="submit" value="Usuń" class="btn btn-outline-danger btn-sm" />
-                {{ form_end(delete_form) }}
-            </li>
-        {% endif %}
-    </ul>
+
+
+            <ul class="list-group">Albumy:
+                {% for album in artist.albums %}
+                    <li class="list-group-item" >
+                        <a href="{{ path('album_show', { 'id': album.id }) }}">
+                            {{ album.name }} ({{ album.releaseDate.format("Y") }})
+                        </a>
+                    </li>
+                {% else %}
+                    <i>Ten artysta nie ma jeszcze dodanych albumów...</i>
+                {% endfor %}
+            </ul>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <ul>
+                    <li>
+                        <a href="{{ path('album_new', { 'artistId': artist.id }) }}">Dodaj nowy album</a>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
 {% endblock %}
