@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="genre")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GenreRepository")
+ * @UniqueEntity("name")
  */
 class Genre
 {
@@ -27,6 +30,7 @@ class Genre
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -34,6 +38,7 @@ class Genre
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @Assert\Type("string")
      */
     private $description;
 
@@ -58,13 +63,13 @@ class Genre
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="addedGenres")
-     * @ORM\JoinColumn(name="added_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="added_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $addedBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="editedGenres")
-     * @ORM\JoinColumn(name="edited_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="edited_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $editedBy;
 
@@ -184,6 +189,14 @@ class Genre
         $this->editedBy = $editedBy;
     }
 
-
+    /**
+     * Get albums
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAlbums()
+    {
+        return $this->albums;
+    }
 }
 

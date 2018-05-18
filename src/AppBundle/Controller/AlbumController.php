@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Album;
 use AppBundle\Entity\Artist;
+use AppBundle\Entity\Review;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,7 +27,7 @@ class AlbumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $albums = $em->getRepository('AppBundle:Album')->findAll();
+        $albums = $em->getRepository('AppBundle:Album')->findBy(['approved' => 1]);
 
         return $this->render('album/index.html.twig', array(
             'albums' => $albums,
@@ -69,17 +70,37 @@ class AlbumController extends Controller
      * Finds and displays a album entity.
      *
      * @Route("/{id}", name="album_show")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
-    public function showAction(Album $album)
+    public function showAction(Album $album, Request $request)
     {
         $deleteForm = $this->createDeleteForm($album);
-        $approvedForm = $this->createApprovedForm($album);
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $review = $this->getDoctrine()->getRepository(Review::class)->findOneBy([
+            'user' => $user->getID(),
+            'album' => $album->getID()
+        ]);
+
+        if(!isset($review)){
+            $review = new Review();
+        }
+        $reviewForm = $this->createForm('AppBundle\Form\ReviewType', $review);
+        $reviewForm->handleRequest($request);
+
+        if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
+            $review->setAlbum($album);
+            $review->setUser($user);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($review);
+            $em->flush();
+
+            return $this->redirectToRoute('album_show', array('id' => $album->getId()));
+        }
 
         return $this->render('album/show.html.twig', array(
             'album' => $album,
             'delete_form' => $deleteForm->createView(),
-            'approved_form' => $approvedForm->createView(),
+            'review_form' => $reviewForm->createView(),
         ));
     }
 
@@ -94,11 +115,12 @@ class AlbumController extends Controller
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $deleteForm = $this->createDeleteForm($album);
-        $approvedForm = $this->createApprovedForm($album);
         $editForm = $this->createForm('AppBundle\Form\AlbumType', $album);
         $editForm->handleRequest($request);
+        $isApproved = $request->get('approved') ? 1 : 0;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $album->setApproved($isApproved);
             $album->setEditedBy($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($album);
@@ -111,7 +133,6 @@ class AlbumController extends Controller
             'album' => $album,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'approved_form' => $approvedForm->createView(),
         ));
     }
 
@@ -137,26 +158,6 @@ class AlbumController extends Controller
     }
 
     /**
-     *
-     * @Route("/{id}", name="album_approved")
-     * @Method("PATCH")
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function approvedAction(Request $request, Album $album){
-        $form = $this->createApprovedForm($album);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $album->setApproved();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($album);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('album_index');
-    }
-
-    /**
      * Creates a form to delete a album entity.
      *
      * @param Album $album The album entity
@@ -172,19 +173,4 @@ class AlbumController extends Controller
         ;
     }
 
-    /**
-     * Creates a form to approved a album entity.
-     *
-     * @param Album $album The album entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createApprovedForm(Album $album)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('album_approved', array('id' => $album->getId())))
-            ->setMethod('PATCH')
-            ->getForm()
-            ;
-    }
 }

@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="review")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ReviewRepository")
+ * @UniqueEntity(
+ *    fields={"album", "user"},
+ *    errorPath="album",
+ *    message="Dodałeś już opinie"
+ * )
  */
 class Review
 {
@@ -26,6 +33,12 @@ class Review
      * @var int
      *
      * @ORM\Column(name="rating", type="integer")
+     * @Assert\Type("integer")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 10
+     * )
      */
     private $rating;
 
@@ -45,13 +58,13 @@ class Review
 
     /**
      * @ORM\ManyToOne(targetEntity="Album", inversedBy="reviews")
-     * @ORM\JoinColumn(name="album_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="album_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $album;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="reviews")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 

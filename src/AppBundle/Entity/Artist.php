@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -27,6 +28,7 @@ class Artist
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -34,6 +36,7 @@ class Artist
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @Assert\Type("string")
      */
     private $description;
 
@@ -53,13 +56,13 @@ class Artist
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="addedArtists")
-     * @ORM\JoinColumn(name="added_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="added_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $addedBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="editedArtists")
-     * @ORM\JoinColumn(name="edited_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="edited_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $editedBy;
 

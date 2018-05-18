@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,6 +29,7 @@ class Album
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -35,6 +37,7 @@ class Album
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @Assert\Type("string")
      */
     private $description;
 
@@ -42,6 +45,7 @@ class Album
      * @var date
      *
      * @ORM\Column(name="release_date", type="date")
+     * @Assert\Date()
      */
     private $releaseDate;
 
@@ -53,21 +57,22 @@ class Album
     private $creationDate;
 
     /**
- * @var boolean
- *
- * @ORM\Column(name="approved", type="boolean")
- */
+     * @var boolean
+     *
+     * @ORM\Column(name="approved", type="boolean")
+     * @Assert\Type("bool")
+     */
     private $approved;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="addedAlbums")
-     * @ORM\JoinColumn(name="added_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="added_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $addedBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="editedAlbums")
-     * @ORM\JoinColumn(name="edited_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="edited_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $editedBy;
 
@@ -313,5 +318,17 @@ class Album
         $this->editedBy = $editedBy;
     }
 
+    public function averageRating()
+    {
+        $reviews = $this->reviews;
+        $sum = 0;
+        foreach ($reviews as $review) {
+            $sum += $review->getRating();
+        }
+        if($sum > 0){
+            return $sum/$reviews->count();
+        }
+        return 0;
+    }
 
 }

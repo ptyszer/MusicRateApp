@@ -25,7 +25,7 @@ class GenreController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $genres = $em->getRepository('AppBundle:Genre')->findAll();
+        $genres = $em->getRepository('AppBundle:Genre')->findBy(['approved' => 1]);
 
         return $this->render('genre/index.html.twig', array(
             'genres' => $genres,
@@ -41,11 +41,13 @@ class GenreController extends Controller
      */
     public function newAction(Request $request)
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $genre = new Genre();
         $form = $this->createForm('AppBundle\Form\GenreType', $genre);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $genre->setAddedBy($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($genre);
             $em->flush();
@@ -68,12 +70,10 @@ class GenreController extends Controller
     public function showAction(Genre $genre)
     {
         $deleteForm = $this->createDeleteForm($genre);
-        $approvedForm = $this->createApprovedForm($genre);
 
         return $this->render('genre/show.html.twig', array(
             'genre' => $genre,
             'delete_form' => $deleteForm->createView(),
-            'approved_form' => $approvedForm->createView(),
         ));
     }
 
@@ -86,22 +86,24 @@ class GenreController extends Controller
      */
     public function editAction(Request $request, Genre $genre)
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $deleteForm = $this->createDeleteForm($genre);
-        $approvedForm = $this->createDeleteForm($genre);
         $editForm = $this->createForm('AppBundle\Form\GenreType', $genre);
         $editForm->handleRequest($request);
+        $isApproved = $request->get('approved') ? 1 : 0;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $genre->setApproved($isApproved);
+            $genre->setEditedBy($user);
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('genre_edit', array('id' => $genre->getId()));
+            return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
         }
 
         return $this->render('genre/edit.html.twig', array(
             'genre' => $genre,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'approved_form' => $approvedForm->createView(),
         ));
     }
 
@@ -127,26 +129,6 @@ class GenreController extends Controller
     }
 
     /**
-     *
-     * @Route("/{id}", name="genre_approved")
-     * @Method("PATCH")
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function approvedAction(Request $request, Genre $genre){
-        $form = $this->createApprovedForm($genre);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $genre->setApproved();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($genre);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('genre_index');
-    }
-
-    /**
      * Creates a form to delete a genre entity.
      *
      * @param Genre $genre The genre entity
@@ -162,19 +144,4 @@ class GenreController extends Controller
         ;
     }
 
-    /**
-     * Creates a form to approved a genre entity.
-     *
-     * @param Genre $genre The genre entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createApprovedForm(Genre $genre)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('genre_approved', array('id' => $genre->getId())))
-            ->setMethod('PATCH')
-            ->getForm()
-            ;
-    }
 }

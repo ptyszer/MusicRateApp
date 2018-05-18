@@ -13,8 +13,10 @@ class ArtistType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('description');
-    }/**
+        $builder
+            ->add('name')->add('description');
+    }
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
