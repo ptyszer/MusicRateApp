@@ -10,4 +10,13 @@ namespace AppBundle\Repository;
  */
 class AlbumRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function search($string)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a FROM AppBundle:Album a WHERE a.name LIKE :string ORDER BY a.name ASC"
+//                "SELECT a FROM AppBundle:Album a WHERE CONCAT(a.name, ' ', p.lastName) LIKE :string ORDER BY p.firstName ASC"
+            )->setParameter('string', '%'.$string.'%')
+            ->getResult();
+    }
 }

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Albumy - MusicRate{% endblock %}
+{% block container %}
+    <h4>Albumy</h4>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Wykonawca</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for album in albums %}
+            <tr>
+                <td>
+                    <a href="{{ path('album_show', { 'id': album.id }) }}">
+                        {{ album.name }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
+                        {{ album.artist.name }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}
