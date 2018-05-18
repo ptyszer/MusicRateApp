@@ -1,4 +1,4 @@
-MusiRateApp
+MusicRateApp
 =========
 Aplikacja do katalogowania informacji o albumach muzycznych i ich oceniania przez użytkowników.
 
