@@ -1,0 +1,85 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block container %}
+<h3 style="color: #C82829; text-align: center">Admin Panel</h3>
+
+    <div class="row">
+
+        {#artists#}
+        <div class="col-sm">
+            <h4>Wykonawcy</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Wykonawca</th>
+                    <th scope="col">Dodany przez</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for artist in artists %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('artist_edit', { 'id': artist.id }) }}">
+                                {{ artist.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ artist.addedBy }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {#albums#}
+        <div class="col-sm">
+            <h4>Albumy</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Tytuł</th>
+                    <th scope="col">Dodany przez</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for album in albums %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('album_edit', { 'id': album.id }) }}">
+                                {{ album.name }} ({{ album.artist.name }})
+                            </a>
+                        </td>
+                        <td>
+                            {{ album.addedBy }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {#genres#}
+        <div class="col-sm">
+            <h4>Gatunki</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Nazwa</th>
+                    <th scope="col">Dodano przez</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for genre in genres %}
+                    <tr>
+                        <td><a href="{{ path('genre_edit', { 'id': genre.id }) }}">{{ genre.name }}</a></td>
+                        <td>{{ genre.addedBy }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

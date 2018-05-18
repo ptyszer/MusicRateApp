@@ -20,11 +20,17 @@
                 <a class="nav-link" href="{{ path('genre_index') }}">Gatunki</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Wyszukaj..." aria-label="Search">
+        <form class="form-inline my-2 my-lg-0" action="{{ path('search') }}" method="post">
+            <input class="form-control mr-sm-2" type="search" placeholder="Wyszukaj..." aria-label="Search" name="search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Szukaj</button>
         </form>
         <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('admin') }}">ADMIN PANEL</a>
+                </li>
+            {% endif %}
+
             {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('fos_user_security_login') }}">Logowanie</a>
