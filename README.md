@@ -1,6 +1,6 @@
 MusiRateApp
 =========
-Aplikacja do katalogowania informacji o albumach muzycznych i ich oceniania prze użytkowników.
+Aplikacja do katalogowania informacji o albumach muzycznych i ich oceniania przez użytkowników.
 
 Każdy użytkownik może dodawać nowych artystów, albumy i gatunki muzyczne, po dodaniu są one widoczne dopiero po zatwierdzeniu przez administratora.
 
