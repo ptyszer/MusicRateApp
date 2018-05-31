@@ -3,32 +3,28 @@
 {% block title %} {{ genre.name }} - MusicRate {% endblock %}
 {% block container %}
 
-    <div class="card mb-3">
-        {#<img class="card-img-top" src=".../100px180/" alt="Card image cap">#}
-        <div class="card-body">
-            <h5 class="card-title">{{ genre.name }}</h5>
-            <p class="card-text">{{ genre.description }}</p>
-            {#<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>#}
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('genre_edit', { 'id': genre.id }) }}" class="card-link">Edytuj</a>
-            {% endif %}
-
-            <br>
-            <h6>Albumy z gatunku {{ genre.name }}:</h6>
-            {% for album in genre.albums %}
-                <ul class="list-group bmd-list-group-sm">
-                    <a href="{{ path('album_show', {'id': album.id}) }}" class="list-group-item">
-                        <div class="bmd-list-group-col">
-                            <p class="list-group-item-heading">{{ album.name }}</p>
-                            <p class="list-group-item-text">{{ album.artist.name }}</p>
-                        </div>
-                    </a>
-                </ul>
-            {% else %}
-                <i>Nie ma jeszcze albumów z tego gatunku..</i>
-            {% endfor %}
-
-        </div>
+<div class="row">
+    <div class="col">
+        <h3 class="card-title">{{ genre.name }}</h3>
+        <p>{{ genre.description }}</p>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('genre_edit', { 'id': genre.id }) }}">Edytuj</a>
+        {% endif %}
+        <br><br>
+        <h6>Albumy z gatunku {{ genre.name }}:</h6>
+        {% for album in genre.albums %}
+            <ul class="list-group bmd-list-group-sm">
+                <a href="{{ path('album_show', {'id': album.id}) }}" class="list-group-item">
+                    <div class="bmd-list-group-col">
+                        <p class="list-group-item-heading">{{ album.name }}</p>
+                        <p class="list-group-item-text">{{ album.artist.name }}</p>
+                    </div>
+                </a>
+            </ul>
+        {% else %}
+            <i>Nie ma jeszcze albumów z tego gatunku..</i>
+        {% endfor %}
     </div>
+</div>
 
 {% endblock %}

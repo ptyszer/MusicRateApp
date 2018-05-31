@@ -3,17 +3,23 @@
 {% block title %}{{ artist.name }} - MusicRate{% endblock %}
 {% block container %}
 
-    <div class="card mb-3">
-        {#<img class="card-img-top" src=".../100px180/" alt="Card image cap">#}
-        <div class="card-body">
-            <h5 class="card-title">{{ artist.name }}</h5>
-            <p class="card-text">{{ artist.description }}</p>
-            {#<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>#}
+
+    <div class="row">
+        <div class="col-4">
+            <img src="{{ asset('default-image.jpg') }}" alt="artist image" width="100%">
+        </div>
+        <div class="col">
+            <h3>{{ artist.name }}</h3>
+            <p>{{ artist.description }}</p>
+
             {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('artist_edit', { 'id': artist.id }) }}" class="card-link">Edytuj</a>
+                <a href="{{ path('artist_edit', { 'id': artist.id }) }}">Edytuj</a>
             {% endif %}
 
-
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-10">
             <ul class="list-group">Albumy:
                 {% for album in artist.albums %}
                     <li class="list-group-item" >
