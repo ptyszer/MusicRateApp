@@ -16,6 +16,11 @@
                 {{ form_errors(form.description) }}
                 {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
             </div>
+            <div class="form-group">
+                {{ form_label(form.image, 'Zdjęcie', {'label_attr': {'class': 'bmd-label-static'}}) }}
+                {{ form_errors(form.image) }}
+                {{ form_widget(form.image, {'attr': {'class': 'form-control-file'}}) }}
+            </div>
             <input type="submit" value="Dodaj" class="btn btn-primary btn-raised" />
             {{ form_end(form) }}
         </div>

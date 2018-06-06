@@ -6,7 +6,9 @@ use AppBundle\Entity\Artist;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Artist controller.
@@ -46,6 +48,17 @@ class ArtistController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // $file stores the uploaded image file
+            /** @var UploadedFile $file */
+            $file = $artist->getImage();
+
+            // upload the file to the directory where images are stored
+            if($file){
+                $result = $this->get('speicher210_cloudinary.uploader')->upload($file);
+                $artist->setImage($result['public_id']);
+            }
+
             $artist->setAddedBy($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($artist);
@@ -76,6 +89,7 @@ class ArtistController extends Controller
         ));
     }
 
+    //todo - fix image update
     /**
      * Displays a form to edit an existing artist entity.
      *
@@ -92,6 +106,17 @@ class ArtistController extends Controller
         $isApproved = $request->get('approved') ? 1 : 0;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            // $file stores the uploaded image file
+            /** @var UploadedFile $file */
+            $file = $artist->getImage();
+
+            // upload the file to the directory where images are stored
+            if($file){
+                $result = $this->get('speicher210_cloudinary.uploader')->upload($file);
+                $artist->setImage($result['public_id']);
+            }
+
             $artist->setApproved($isApproved);
             $artist->setEditedBy($user);
             $this->getDoctrine()->getManager()->flush();

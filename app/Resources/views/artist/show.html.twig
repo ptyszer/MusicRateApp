@@ -6,7 +6,11 @@
 
     <div class="row">
         <div class="col-4">
-            <img src="{{ asset('default-image.jpg') }}" alt="artist image" width="100%">
+            {% if artist.image %}
+                <img src="{{ cloudinary_url(artist.image, {'crop': 'fill'}) }}" alt="artist image" width="100%">
+            {% else %}
+                <img src="{{ asset('default-image.jpg') }}" alt="artist image" width="100%">
+            {% endif %}
         </div>
         <div class="col">
             <h3>{{ artist.name }}</h3>

@@ -7,6 +7,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    image_directory: '%kernel.project_dir%/web/uploads/images'
 
 framework:
     #esi: ~
@@ -76,3 +77,14 @@ fos_user:
     from_email:
         address: "%mailer_user%"
         sender_name: "%mailer_user%"
+
+speicher210_cloudinary:
+    url: cloudinary://639742169436554:PLf-U6p6-XMatrhh-xMsIo62yQg@przemocloud
+    # The next configuration variables should be defined if they are not present in the URL
+    # The URL will take precedence
+    cloud_name: przemocloud
+    access_identifier:
+        api_key: 639742169436554
+        api_secret: PLf-U6p6-XMatrhh-xMsIo62yQg
+    options:
+        secure: true

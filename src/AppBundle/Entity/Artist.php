@@ -41,6 +41,17 @@ class Artist
     private $description;
 
     /**
+     * @ORM\Column(name="image", type="string", length=255, nullable=true)
+     * @Assert\Image(
+     *     minWidth = 100,
+     *     maxWidth = 800,
+     *     minHeight = 100,
+     *     maxHeight = 800
+     * )
+     */
+    private $image;
+
+    /**
      * @var datetime
      *
      * @ORM\Column(name="creation_date", type="datetime")
@@ -231,6 +242,18 @@ class Artist
     public function getCreationDate()
     {
         return $this->creationDate;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
     }
 
 
