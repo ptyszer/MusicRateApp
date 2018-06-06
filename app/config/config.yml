@@ -79,7 +79,7 @@ fos_user:
         sender_name: "%mailer_user%"
 
 speicher210_cloudinary:
-    url: cloudinary://639742169436554:PLf-U6p6-XMatrhh-xMsIo62yQg@przemocloud
+    url: '%cloud_url%'
     # The next configuration variables should be defined if they are not present in the URL
     # The URL will take precedence
     cloud_name: '%cloud_name%'
