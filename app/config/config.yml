@@ -82,9 +82,9 @@ speicher210_cloudinary:
     url: cloudinary://639742169436554:PLf-U6p6-XMatrhh-xMsIo62yQg@przemocloud
     # The next configuration variables should be defined if they are not present in the URL
     # The URL will take precedence
-    cloud_name: przemocloud
+    cloud_name: '%cloud_name%'
     access_identifier:
-        api_key: 639742169436554
-        api_secret: PLf-U6p6-XMatrhh-xMsIo62yQg
+        api_key: '%api_key%'
+        api_secret: '%api_secret%'
     options:
         secure: true
