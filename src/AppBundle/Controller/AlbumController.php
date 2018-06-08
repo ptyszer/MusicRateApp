@@ -76,10 +76,13 @@ class AlbumController extends Controller
     {
         $deleteForm = $this->createDeleteForm($album);
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $review = $this->getDoctrine()->getRepository(Review::class)->findOneBy([
-            'user' => $user->getID(),
-            'album' => $album->getID()
-        ]);
+
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $review = $this->getDoctrine()->getRepository(Review::class)->findOneBy([
+                'user' => $user->getID(),
+                'album' => $album->getID()
+            ]);
+        }
 
         if(!isset($review)){
             $review = new Review();
@@ -88,6 +91,9 @@ class AlbumController extends Controller
         $reviewForm->handleRequest($request);
 
         if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
+            if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+                return $this->redirectToRoute('fos_user_security_login');
+            }
             $review->setAlbum($album);
             $review->setUser($user);
             $em = $this->getDoctrine()->getManager();
