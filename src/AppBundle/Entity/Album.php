@@ -42,6 +42,19 @@ class Album
     private $description;
 
     /**
+     * @ORM\Column(name="image", type="string", length=255, nullable=true)
+     * @Assert\Image(
+     *     minWidth = 100,
+     *     maxWidth = 800,
+     *     minHeight = 100,
+     *     maxHeight = 800
+     * )
+     */
+    private $image;
+
+
+
+    /**
      * @var date
      *
      * @ORM\Column(name="release_date", type="date")
@@ -331,4 +344,13 @@ class Album
         return 0;
     }
 
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
 }

@@ -8,7 +8,9 @@ use AppBundle\Entity\Review;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Album controller.
@@ -50,6 +52,16 @@ class AlbumController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // $file stores the uploaded image file
+            /** @var UploadedFile $file */
+            $file = $album->getImage();
+
+            // upload the file to the directory where images are stored
+            if($file){
+                $result = $this->get('speicher210_cloudinary.uploader')->upload($file);
+                $album->setImage($result['public_id']);
+            }
+
             $album->setArtist($artist);
             $album->setAddedBy($user);
             $em = $this->getDoctrine()->getManager();
@@ -126,6 +138,16 @@ class AlbumController extends Controller
         $isApproved = $request->get('approved') ? 1 : 0;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            // $file stores the uploaded image file
+            /** @var UploadedFile $file */
+            $file = $album->getImage();
+
+            // upload the file to the directory where images are stored
+            if($file){
+                $result = $this->get('speicher210_cloudinary.uploader')->upload($file);
+                $album->setImage($result['public_id']);
+            }
+
             $album->setApproved($isApproved);
             $album->setEditedBy($user);
             $em = $this->getDoctrine()->getManager();
