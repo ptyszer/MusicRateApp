@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Album;
+use AppBundle\Entity\Artist;
+use AppBundle\Entity\Genre;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,8 +27,14 @@ class DefaultController extends Controller
      */
     public function searchAction(Request $request)
     {
-        $string = $request->get('search');
-        $results = $this->getDoctrine()->getRepository(Album::class)->search($string);
-        return $this->render('search_result.html.twig', array('albums' => $results));
+        $phrase = $request->get('search');
+        $artists = $this->getDoctrine()->getRepository(Artist::class)->findByName($phrase);
+        $albums = $this->getDoctrine()->getRepository(Album::class)->findByName($phrase);
+        $genres = $this->getDoctrine()->getRepository(Genre::class)->findByName($phrase);
+        return $this->render('search_result.html.twig', array(
+            'artists' => $artists,
+            'albums' => $albums,
+            'genres' => $genres,
+        ));
     }
 }

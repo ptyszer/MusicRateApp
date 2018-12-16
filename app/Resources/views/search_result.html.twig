@@ -1,33 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Albumy - MusicRate{% endblock %}
+{% block title %}MusicRate{% endblock %}
 {% block container %}
-    <h4>Albumy</h4>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Tytuł</th>
-            <th scope="col">Wykonawca</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for album in albums %}
+    {% if artists %}
+        <table class="table">
+            <thead>
             <tr>
-                <td>
-                    <a href="{{ path('album_show', { 'id': album.id }) }}">
-                        {{ album.name }}
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
-                        {{ album.artist.name }}
-                    </a>
-                </td>
+                <th scope="col">Wykonawcy</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-
+            </thead>
+            <tbody>
+            {% for artist in artists %}
+                <tr>
+                    <td><a href="{{ path('artist_show', { 'id': artist.id }) }}">{{ artist.name }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    {% if albums %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Albumy</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for album in albums %}
+                <tr>
+                    <td>
+                        <a href="{{ path('album_show', { 'id': album.id }) }}">
+                            {{ album.name }}
+                            (<a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
+                                {{ album.artist.name }}
+                            </a>)
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    {% if genres %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Gatunki</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for genre in genres %}
+                <tr>
+                    <td><a href="{{ path('genre_show', { 'id': genre.id }) }}">{{ genre.name }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}
