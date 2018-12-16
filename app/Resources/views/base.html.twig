@@ -17,8 +17,9 @@
 <body>
 {% include('navbar.html.twig') %}
 <div class="container">
-    <br>
-    {% block container %}{% endblock %}
+    <div class="mt-5">
+        {% block container %}{% endblock %}
+    </div>
 </div>
 {% block body %}{% endblock %}
 <!-- Optional JavaScript -->
