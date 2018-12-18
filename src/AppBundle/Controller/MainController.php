@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends Controller
+class MainController extends Controller
 {
     /**
      * @Route("/", methods={"GET"}, name="homepage")
@@ -17,7 +17,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
+        return $this->render('main/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
@@ -31,7 +31,7 @@ class DefaultController extends Controller
         $artists = $this->getDoctrine()->getRepository(Artist::class)->findByName($phrase);
         $albums = $this->getDoctrine()->getRepository(Album::class)->findByName($phrase);
         $genres = $this->getDoctrine()->getRepository(Genre::class)->findByName($phrase);
-        return $this->render('search_result.html.twig', array(
+        return $this->render('main/search_result.html.twig', array(
             'artists' => $artists,
             'albums' => $albums,
             'genres' => $genres,
