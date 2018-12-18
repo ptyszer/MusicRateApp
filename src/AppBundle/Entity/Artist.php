@@ -59,6 +59,13 @@ class Artist
     private $creationDate;
 
     /**
+     * @var datetime
+     *
+     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
+     */
+    private $lastEdit;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="approved", type="boolean")
@@ -191,7 +198,7 @@ class Artist
     /**
      * @return mixed
      */
-    public function getApproved()
+    public function isApproved()
     {
         return $this->approved;
     }
@@ -244,6 +251,22 @@ class Artist
         return $this->creationDate;
     }
 
+    /**
+     * @return DateTime
+     */
+    public function getLastEdit()
+    {
+        return $this->lastEdit;
+    }
+
+    /**
+     * @param DateTime $lastEdit
+     */
+    public function setLastEdit($lastEdit)
+    {
+        $this->lastEdit = $lastEdit;
+    }
+
     public function getImage()
     {
         return $this->image;
@@ -255,7 +278,4 @@ class Artist
 
         return $this;
     }
-
-
-
 }
