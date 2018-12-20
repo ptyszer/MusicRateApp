@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Moja strona{% endblock %}
+
+{% block container %}
+    <h4>Dodane przeze mnie</h4>
+    <div class="row">
+
+        {#artists#}
+        <div class="col-sm">
+            <h4>Wykonawcy</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Wykonawca</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for artist in artists %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('artist_show', { 'id': artist.id }) }}">
+                                {{ artist.name }}
+                            </a>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {#albums#}
+        <div class="col-sm">
+            <h4>Albumy</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Tytuł</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for album in albums %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('album_show', { 'id': album.id }) }}">
+                                {{ album.name }} ({{ album.artist.name }})
+                            </a>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

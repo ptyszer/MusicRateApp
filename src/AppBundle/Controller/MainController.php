@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Album;
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Genre;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,6 +37,24 @@ class MainController extends Controller
             'artists' => $artists,
             'albums' => $albums,
             'genres' => $genres,
+        ));
+    }
+
+    /**
+     * @Route("/my_page", name="my_page")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function myPageAction()
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $artists = $em->getRepository('AppBundle:Artist')->findBy(['addedBy' => $user]);
+        $albums = $em->getRepository('AppBundle:Album')->findBy(['addedBy' => $user]);
+        return $this->render('main/user_page.html.twig', array(
+            'artists' => $artists,
+            'albums' => $albums,
         ));
     }
 }
