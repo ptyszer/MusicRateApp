@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Utils\ItemInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Date;
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="album")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AlbumRepository")
  */
-class Album
+class Album implements ItemInterface
 {
     /**
      * @var int
@@ -79,10 +80,10 @@ class Album
     /**
      * @var boolean
      *
-     * @ORM\Column(name="approved", type="boolean")
+     * @ORM\Column(name="public", type="boolean")
      * @Assert\Type("bool")
      */
-    private $approved;
+    private $public;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="addedAlbums")
@@ -121,7 +122,7 @@ class Album
         $this->genres = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->creationDate = new \DateTime();
-        $this->approved = false;
+        $this->public = false;
     }
 
     /**
@@ -309,17 +310,17 @@ class Album
     /**
      * @return bool
      */
-    public function isApproved()
+    public function isPublic()
     {
-        return $this->approved;
+        return $this->public;
     }
 
     /**
-     * @param bool $approved
+     * @param bool $public
      */
-    public function setApproved($approved = true)
+    public function setPublic($public = true)
     {
-        $this->approved = $approved;
+        $this->public = $public;
     }
 
     /**

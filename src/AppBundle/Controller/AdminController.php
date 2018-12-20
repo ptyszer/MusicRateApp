@@ -17,9 +17,9 @@ class AdminController extends Controller
     public function adminAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->findBy(['approved' => 0]);
-        $albums = $em->getRepository('AppBundle:Album')->findBy(['approved' => 0]);
-        $genres = $em->getRepository('AppBundle:Genre')->findBy(['approved' => 0]);
+        $artists = $em->getRepository('AppBundle:Artist')->findBy(['public' => 0]);
+        $albums = $em->getRepository('AppBundle:Album')->findBy(['public' => 0]);
+        $genres = $em->getRepository('AppBundle:Genre')->findBy(['public' => 0]);
         return $this->render('admin/admin.html.twig', array(
             'artists' => $artists,
             'albums' => $albums,

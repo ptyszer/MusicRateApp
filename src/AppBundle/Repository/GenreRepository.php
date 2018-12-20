@@ -14,7 +14,7 @@ class GenreRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                "SELECT g FROM AppBundle:Genre g WHERE g.name LIKE :string ORDER BY g.name ASC"
+                "SELECT g FROM AppBundle:Genre g WHERE g.name LIKE :string AND g.public = 1 ORDER BY g.name ASC"
             )->setParameter('string', '%'.$phrase.'%')
             ->getResult();
     }

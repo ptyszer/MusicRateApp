@@ -14,7 +14,7 @@ class ArtistRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                "SELECT a FROM AppBundle:Artist a WHERE a.name LIKE :string ORDER BY a.name ASC"
+                "SELECT a FROM AppBundle:Artist a WHERE a.name LIKE :string AND a.public = 1 ORDER BY a.name ASC"
             )->setParameter('string', '%'.$phrase.'%')
             ->getResult();
     }
