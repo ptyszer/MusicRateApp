@@ -29,7 +29,7 @@ class AlbumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $albums = $em->getRepository('AppBundle:Album')->findBy(['approved' => 1]);
+        $albums = $em->getRepository('AppBundle:Album')->findBy(['public' => 1]);
 
         return $this->render('album/index.html.twig', array(
             'albums' => $albums,
@@ -84,40 +84,22 @@ class AlbumController extends Controller
      * @Route("/{id}", name="album_show")
      * @Method({"GET", "POST"})
      */
-    public function showAction(Album $album, Request $request)
+    public function showAction(Album $album)
     {
-        $deleteForm = $this->createDeleteForm($album);
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
             $review = $this->getDoctrine()->getRepository(Review::class)->findOneBy([
                 'user' => $user->getID(),
                 'album' => $album->getID()
             ]);
-        }
-
-        if(!isset($review)){
+        if (!isset($review))
             $review = new Review();
-        }
+
         $reviewForm = $this->createForm('AppBundle\Form\ReviewType', $review);
-        $reviewForm->handleRequest($request);
-
-        if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
-            if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-                return $this->redirectToRoute('fos_user_security_login');
-            }
-            $review->setAlbum($album);
-            $review->setUser($user);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($review);
-            $em->flush();
-
-            return $this->redirectToRoute('album_show', array('id' => $album->getId()));
-        }
 
         return $this->render('album/show.html.twig', array(
             'album' => $album,
-            'delete_form' => $deleteForm->createView(),
             'review_form' => $reviewForm->createView(),
         ));
     }
@@ -135,7 +117,7 @@ class AlbumController extends Controller
         $deleteForm = $this->createDeleteForm($album);
         $editForm = $this->createForm('AppBundle\Form\AlbumType', $album);
         $editForm->handleRequest($request);
-        $isApproved = $request->get('approved') ? 1 : 0;
+//        $isApproved = $request->get('approved') ? 1 : 0;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             // $file stores the uploaded image file
@@ -148,7 +130,7 @@ class AlbumController extends Controller
                 $album->setImage($result['public_id']);
             }
 
-            $album->setApproved($isApproved);
+//            $album->setPublic($isApproved);
             $album->setEditedBy($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($album);
