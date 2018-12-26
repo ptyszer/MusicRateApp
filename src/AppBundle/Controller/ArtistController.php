@@ -7,8 +7,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Artist controller.
@@ -26,7 +30,7 @@ class ArtistController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->findBy(['approved' => 1]);
+        $artists = $em->getRepository('AppBundle:Artist')->findBy(['public' => 1]);
 
         return $this->render('artist/index.html.twig', array(
             'artists' => $artists,
@@ -81,12 +85,14 @@ class ArtistController extends Controller
      */
     public function showAction(Artist $artist)
     {
-        $deleteForm = $this->createDeleteForm($artist);
-
-        return $this->render('artist/show.html.twig', array(
-            'artist' => $artist,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        try {
+            $this->denyAccessUnlessGranted('view', $artist);
+            return $this->render('artist/show.html.twig', array(
+                'artist' => $artist
+            ));
+        } catch (AccessDeniedException $e){
+            return new Response($e->getMessage()) ;
+        }
     }
 
     //todo - fix image update
@@ -95,7 +101,7 @@ class ArtistController extends Controller
      *
      * @Route("/{id}/edit", name="artist_edit")
      * @Method({"GET", "POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER')")
      */
     public function editAction(Request $request, Artist $artist)
     {
@@ -103,8 +109,16 @@ class ArtistController extends Controller
         $deleteForm = $this->createDeleteForm($artist);
         $editForm = $this->createForm('AppBundle\Form\ArtistType', $artist);
         $editForm->handleRequest($request);
-        $isApproved = $request->get('approved') ? 1 : 0;
+//        $isApproved = $request->get('approved') ? 1 : 0;
 
+//        if($artist->getImage()){
+//
+//        }
+//
+//        $image = $artist->getImage();
+//        $imagePath = cloudinary_url($image);
+//
+//        dump($editForm);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             // $file stores the uploaded image file
@@ -117,18 +131,25 @@ class ArtistController extends Controller
                 $artist->setImage($result['public_id']);
             }
 
-            $artist->setApproved($isApproved);
+            $date = new DateTime();
+//            $artist->setApproved($isApproved);
             $artist->setEditedBy($user);
+            $artist->setLastEdit($date);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('artist_show', array('id' => $artist->getId()));
         }
 
-        return $this->render('artist/edit.html.twig', array(
-            'artist' => $artist,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        try {
+            $this->denyAccessUnlessGranted('edit', $artist);
+            return $this->render('artist/edit.html.twig', array(
+                'artist' => $artist,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
+        } catch (AccessDeniedException $e){
+            return new Response($e->getMessage()) ;
+        }
     }
 
     /**
@@ -148,6 +169,24 @@ class ArtistController extends Controller
             $em->remove($artist);
             $em->flush();
         }
+
+        return $this->redirectToRoute('artist_index');
+    }
+
+    /**
+     * Approve a artist entity.
+     *
+     * @Route("/{id}//approve", name="artist_delete")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function approveAction(Request $request, Artist $artist)
+    {
+        $artist->setPublic();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($artist);
+        $em->flush();
+
 
         return $this->redirectToRoute('artist_index');
     }

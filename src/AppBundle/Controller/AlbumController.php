@@ -4,13 +4,14 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Album;
 use AppBundle\Entity\Artist;
-use AppBundle\Entity\Review;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Album controller.
@@ -86,22 +87,12 @@ class AlbumController extends Controller
      */
     public function showAction(Album $album)
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
-            $review = $this->getDoctrine()->getRepository(Review::class)->findOneBy([
-                'user' => $user->getID(),
-                'album' => $album->getID()
-            ]);
-        if (!isset($review))
-            $review = new Review();
-
-        $reviewForm = $this->createForm('AppBundle\Form\ReviewType', $review);
-
-        return $this->render('album/show.html.twig', array(
-            'album' => $album,
-            'review_form' => $reviewForm->createView(),
-        ));
+        try {
+            $this->denyAccessUnlessGranted('view', $album);
+            return $this->render('album/show.html.twig', array('album' => $album));
+        } catch (AccessDeniedException $e){
+            return new Response($e->getMessage()) ;
+        }
     }
 
     /**
@@ -139,11 +130,16 @@ class AlbumController extends Controller
             return $this->redirectToRoute('album_show', array('id' => $album->getId()));
         }
 
-        return $this->render('album/edit.html.twig', array(
-            'album' => $album,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        try {
+            $this->denyAccessUnlessGranted('edit', $album);
+            return $this->render('album/edit.html.twig', array(
+                'album' => $album,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
+        } catch (AccessDeniedException $e){
+            return new Response($e->getMessage()) ;
+        }
     }
 
     /**
