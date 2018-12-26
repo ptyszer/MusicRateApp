@@ -100,7 +100,7 @@ class AlbumController extends Controller
      *
      * @Route("/{id}/edit", name="album_edit")
      * @Method({"GET", "POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER')")
      */
     public function editAction(Request $request, Album $album)
     {

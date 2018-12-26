@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Genre controller.
@@ -25,7 +27,7 @@ class GenreController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $genres = $em->getRepository('AppBundle:Genre')->findBy(['approved' => 1]);
+        $genres = $em->getRepository('AppBundle:Genre')->findBy(['public' => 1]);
 
         return $this->render('genre/index.html.twig', array(
             'genres' => $genres,
@@ -69,12 +71,12 @@ class GenreController extends Controller
      */
     public function showAction(Genre $genre)
     {
-        $deleteForm = $this->createDeleteForm($genre);
-
-        return $this->render('genre/show.html.twig', array(
-            'genre' => $genre,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        try {
+            $this->denyAccessUnlessGranted('view', $genre);
+            return $this->render('genre/show.html.twig', array('genre' => $genre));
+        } catch (AccessDeniedException $e){
+            return new Response($e->getMessage()) ;
+        }
     }
 
     /**
@@ -82,7 +84,7 @@ class GenreController extends Controller
      *
      * @Route("/{id}/edit", name="genre_edit")
      * @Method({"GET", "POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER')")
      */
     public function editAction(Request $request, Genre $genre)
     {
@@ -90,21 +92,24 @@ class GenreController extends Controller
         $deleteForm = $this->createDeleteForm($genre);
         $editForm = $this->createForm('AppBundle\Form\GenreType', $genre);
         $editForm->handleRequest($request);
-        $isApproved = $request->get('approved') ? 1 : 0;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $genre->setApproved($isApproved);
             $genre->setEditedBy($user);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
         }
 
-        return $this->render('genre/edit.html.twig', array(
-            'genre' => $genre,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        try {
+            $this->denyAccessUnlessGranted('edit', $genre);
+            return $this->render('genre/edit.html.twig', array(
+                'genre' => $genre,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
+        } catch (AccessDeniedException $e){
+            return new Response($e->getMessage()) ;
+        }
     }
 
     /**
