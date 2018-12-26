@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Album;
 use AppBundle\Entity\Review;
-use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -21,20 +20,18 @@ class ReviewController extends Controller
     /**
      * Creates a new review entity.
      *
-     * @Route("/new/{album}/{user}", name="review_add")
-     * @Method({"POST"})
+     * @Route("/new/{album}", name="review_add")
+     * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function addAction(Album $album, User $user, Request $request)
+    public function addAction(Album $album, Request $request)
     {
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $review = $this->getDoctrine()->getRepository(Review::class)->findOneBy([
-                'user' => $user->getID(),
-                'album' => $album->getID()
-            ]);
-        }
-
-        if(!isset($review)){
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $review = $this->getDoctrine()->getRepository(Review::class)->findOneBy([
+            'user' => $user->getID(),
+            'album' => $album->getID()
+        ]);
+        if (!isset($review)) {
             $review = new Review();
         }
         $reviewForm = $this->createForm('AppBundle\Form\ReviewType', $review);
@@ -52,5 +49,10 @@ class ReviewController extends Controller
 
             return $this->redirectToRoute('album_show', array('id' => $album->getId()));
         }
+
+        return $this->render('review/review_form.html.twig', array(
+            'album' => $album,
+            'review_form' => $reviewForm->createView(),
+        ));
     }
 }
