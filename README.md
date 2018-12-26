@@ -1,12 +1,13 @@
 MusicRateApp
 =========
-Aplikacja do katalogowania informacji o albumach muzycznych i ich oceniania przez użytkowników.
+An application for cataloging information about artists and music albums.
 
-Każdy użytkownik może dodawać nowych artystów, albumy i gatunki muzyczne, po dodaniu są one widoczne dopiero po zatwierdzeniu przez administratora.
+As a non-logged user, you can view all public information about music genres, artists and albums with reviews of other users.
 
-Każdy użytkownik może ocenić album, dany album można ocenić tylko raz, potem można jedynie edytować swoją opinie.
+After logging in you can add new artists, albums and music genres. After adding, they are visible only after approval by the administrator.
+As a logged in user you can also add album reviews, you can only rate a given album once and then you can edit your review.
 
-Administrator może dodawać, edytować i usuwać wszystkie zasoby.
+The administrator can add, edit and delete all resources.
 
 
 A Symfony project created on May 13, 2018, 8:24 pm.
