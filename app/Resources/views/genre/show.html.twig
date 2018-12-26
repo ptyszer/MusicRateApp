@@ -2,7 +2,9 @@
 
 {% block title %} {{ genre.name }} - MusicRate {% endblock %}
 {% block container %}
-
+    {% if genre.public == false %}
+        <h5 class="text-warning">Ten wpis nie jest jeszcze zatwierdzony przez administratora i nie jest widoczny dla innych użytkowników.</h5>
+    {% endif %}
 <div class="row">
     <div class="col">
         <h3 class="card-title">{{ genre.name }}</h3>
@@ -22,8 +24,18 @@
                 </a>
             </ul>
         {% else %}
-            <i>Nie ma jeszcze albumów z tego gatunku..</i>
+            <i>Nie ma jeszcze albumów z tego gatunku..<br></i>
         {% endfor %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn btn-primary btn-raised" href="{{ path('genre_edit', { 'id': genre.id }) }}">Edytuj</a>
+            {% if not genre.public %}
+                <form action="{{ path('genre_set_public', {'id': genre.id}) }}" method="post" >
+                    <input type="submit" value="Ustaw jako publiczny" class="btn btn-warning btn-raised"
+                           onclick="return confirm('Na pewno ustawić jako publiczny?')">
+                </form>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
 

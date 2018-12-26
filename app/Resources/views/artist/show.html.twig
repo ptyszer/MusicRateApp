@@ -17,11 +17,6 @@
         <div class="col">
             <h3>{{ artist.name }}</h3>
             <p>{{ artist.description }}</p>
-
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('artist_edit', { 'id': artist.id }) }}">Edytuj</a>
-            {% endif %}
-
         </div>
     </div>
     <div class="row justify-content-md-center">
@@ -37,12 +32,22 @@
                     <i>Ten artysta nie ma jeszcze dodanych albumów...</i>
                 {% endfor %}
             </ul>
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') and artist.public %}
                 <ul>
                     <li>
                         <a href="{{ path('album_new', { 'artistId': artist.id }) }}">Dodaj nowy album</a>
                     </li>
                 </ul>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-primary btn-raised" href="{{ path('artist_edit', { 'id': artist.id }) }}">Edytuj</a>
+                {% if not artist.public %}
+                    <form action="{{ path('artist_set_public', {'id': artist.id}) }}" method="post" >
+                        <input type="submit" value="Ustaw jako publiczny" class="btn btn-warning btn-raised"
+                               onclick="return confirm('Na pewno ustawić jako publiczny?')">
+                    </form>
+                {% endif %}
             {% endif %}
         </div>
     </div>

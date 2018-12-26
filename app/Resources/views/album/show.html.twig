@@ -3,7 +3,7 @@
 {% block title %} {{ album.name }} - MusicRate{% endblock %}
 {% block container %}
     {% if album.public == false %}
-        <h5 class="text-warning">Wpis o tym atyście nie jest jeszcze zatwierdzony przez administratora i nie jest widoczny dla innych użytkowników.</h5>
+        <h5 class="text-warning">Wpis o tym albumie nie jest jeszcze zatwierdzony przez administratora i nie jest widoczny dla innych użytkowników.</h5>
     {% endif %}
     <div class="row">
         <div class="col-4">
@@ -80,6 +80,16 @@
                     </li>
                 </ul>
             {% endfor %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-primary btn-raised" href="{{ path('album_edit', { 'id': album.id }) }}">Edytuj</a>
+                {% if not album.public %}
+                    <form action="{{ path('album_set_public', {'id': album.id}) }}" method="post" >
+                        <input type="submit" value="Ustaw jako publiczny" class="btn btn-warning btn-raised"
+                               onclick="return confirm('Na pewno ustawić jako publiczny?')">
+                    </form>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

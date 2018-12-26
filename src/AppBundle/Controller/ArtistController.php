@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Artist controller.
@@ -131,8 +130,7 @@ class ArtistController extends Controller
                 $artist->setImage($result['public_id']);
             }
 
-            $date = new DateTime();
-//            $artist->setApproved($isApproved);
+            $date = new \DateTime();
             $artist->setEditedBy($user);
             $artist->setLastEdit($date);
             $this->getDoctrine()->getManager()->flush();
@@ -174,21 +172,19 @@ class ArtistController extends Controller
     }
 
     /**
-     * Approve a artist entity.
+     * Set artist entity as public.
      *
-     * @Route("/{id}//approve", name="artist_delete")
+     * @Route("/{id}/set_public", name="artist_set_public")
      * @Method("POST")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function approveAction(Request $request, Artist $artist)
+    public function setPublicAction(Artist $artist)
     {
         $artist->setPublic();
         $em = $this->getDoctrine()->getManager();
-        $em->remove($artist);
         $em->flush();
 
-
-        return $this->redirectToRoute('artist_index');
+        return $this->redirectToRoute('artist_show', array('id' => $artist->getId()));
     }
 
     /**

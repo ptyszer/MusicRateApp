@@ -94,7 +94,9 @@ class GenreController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $date = new \DateTime();
             $genre->setEditedBy($user);
+            $genre->setLastEdit($date);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
@@ -131,6 +133,22 @@ class GenreController extends Controller
         }
 
         return $this->redirectToRoute('genre_index');
+    }
+
+    /**
+     * Set genre entity as public.
+     *
+     * @Route("/{id}/set_public", name="genre_set_public")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function setPublicAction(Genre $genre)
+    {
+        $genre->setPublic();
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
     }
 
     /**

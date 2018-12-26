@@ -121,8 +121,9 @@ class AlbumController extends Controller
                 $album->setImage($result['public_id']);
             }
 
-//            $album->setPublic($isApproved);
+            $date = new \DateTime();
             $album->setEditedBy($user);
+            $album->setLastEdit($date);
             $em = $this->getDoctrine()->getManager();
             $em->persist($album);
             $em->flush();
@@ -161,6 +162,22 @@ class AlbumController extends Controller
         }
 
         return $this->redirectToRoute('album_index');
+    }
+
+    /**
+     * Set album entity as public.
+     *
+     * @Route("/{id}/set_public", name="album_set_public")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function setPublicAction(Album $album)
+    {
+        $album->setPublic();
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        return $this->redirectToRoute('album_show', array('id' => $album->getId()));
     }
 
     /**
