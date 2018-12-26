@@ -52,9 +52,11 @@ class MainController extends Controller
 
         $artists = $em->getRepository('AppBundle:Artist')->findBy(['addedBy' => $user]);
         $albums = $em->getRepository('AppBundle:Album')->findBy(['addedBy' => $user]);
+        $genres = $em->getRepository('AppBundle:Genre')->findBy(['addedBy' => $user]);
         return $this->render('main/user_page.html.twig', array(
             'artists' => $artists,
             'albums' => $albums,
+            'genres' => $genres,
         ));
     }
 }

@@ -8,11 +8,10 @@
 
         {#artists#}
         <div class="col-sm">
-            <h4>Wykonawcy</h4>
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Wykonawca</th>
+                    <th scope="col">Wykonawcy</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
@@ -25,7 +24,9 @@
                             </a>
                         </td>
                         <td>
-
+                            {% if not artist.public %}
+                                <a href="{{ path('artist_edit', {'id': artist.id}) }}" class="badge badge-primary">Edytuj</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -35,11 +36,10 @@
 
         {#albums#}
         <div class="col-sm">
-            <h4>Albumy</h4>
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Tytuł</th>
+                    <th scope="col">Albumy</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
@@ -52,12 +52,43 @@
                             </a>
                         </td>
                         <td>
-
+                            {% if not album.public %}
+                                <a href="{{ path('album_edit', {'id': album.id}) }}" class="badge badge-primary">Edytuj</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        {#genres#}
+        <div class="col-sm">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Gatunki muzyczne</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for genre in genres %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('genre_show', { 'id': genre.id }) }}">
+                                {{ genre.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if not genre.public %}
+                                <a href="{{ path('genre_edit', {'id': genre.id}) }}" class="badge badge-primary">Edytuj</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
 {% endblock %}
