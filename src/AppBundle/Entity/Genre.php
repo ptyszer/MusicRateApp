@@ -51,6 +51,13 @@ class Genre implements ItemInterface
     private $creationDate;
 
     /**
+     * @var datetime
+     *
+     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
+     */
+    private $lastEdit;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Album", mappedBy="genres")
      */
     private $albums;
@@ -188,6 +195,22 @@ class Genre implements ItemInterface
     public function setEditedBy($editedBy)
     {
         $this->editedBy = $editedBy;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getLastEdit()
+    {
+        return $this->lastEdit;
+    }
+
+    /**
+     * @param \DateTime $lastEdit
+     */
+    public function setLastEdit($lastEdit)
+    {
+        $this->lastEdit = $lastEdit;
     }
 
     /**

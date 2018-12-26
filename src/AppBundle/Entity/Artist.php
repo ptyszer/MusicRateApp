@@ -261,7 +261,7 @@ class Artist implements ItemInterface
     }
 
     /**
-     * @param DateTime $lastEdit
+     * @param \DateTime $lastEdit
      */
     public function setLastEdit($lastEdit)
     {
