@@ -28,6 +28,7 @@ class AlbumType extends AbstractType
                 'class' => 'AppBundle\Entity\Genre',
                 'choice_label' => 'name',
                 'multiple' => true,
+                'required' => false
             ])
             ->add('image', FileType::class, array(
                 'data_class' => null,
