@@ -187,13 +187,19 @@ class Artist implements ItemInterface
     }
 
     /**
-     * Get albums
+     * Get public albums
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getAlbums()
     {
-        return $this->albums;
+        $result = new ArrayCollection();
+        foreach ($this->albums as $album){
+            if ($album->isPublic()){
+                $result->add($album);
+            }
+        }
+        return $result;
     }
 
     /**
