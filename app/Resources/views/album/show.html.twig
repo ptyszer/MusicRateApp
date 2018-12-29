@@ -6,14 +6,14 @@
         <h5 class="text-warning">Wpis o tym albumie nie jest jeszcze zatwierdzony przez administratora i nie jest widoczny dla innych użytkowników.</h5>
     {% endif %}
     <div class="row">
-        <div class="col-4">
+        <div class="col-sm-4">
             {% if album.image %}
                 <img src="{{ cloudinary_url(album.image, {'crop': 'fill'}) }}" alt="album image" width="100%">
             {% else %}
                 <img src="{{ asset('default-image.jpg') }}" alt="album image" width="100%">
             {% endif %}
         </div>
-        <div class="col">
+        <div class="col-sm-8 mt-3">
             <h3>{{ album.name }}</h3>
             <table>
                 <tbody>

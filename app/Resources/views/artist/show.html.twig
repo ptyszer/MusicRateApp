@@ -7,14 +7,14 @@
         <h5 class="text-warning">Wpis o tym atyście nie jest jeszcze zatwierdzony przez administratora i nie jest widoczny dla innych użytkowników.</h5>
     {% endif %}
     <div class="row">
-        <div class="col-4">
+        <div class="col-sm-4">
             {% if artist.image %}
                 <img src="{{ cloudinary_url(artist.image, {'crop': 'fill'}) }}" alt="artist image" width="100%">
             {% else %}
                 <img src="{{ asset('default-image.jpg') }}" alt="artist image" width="100%">
             {% endif %}
         </div>
-        <div class="col">
+        <div class="col-sm-8 mt-3">
             <h3>{{ artist.name }}</h3>
             <p>{{ artist.description }}</p>
         </div>
