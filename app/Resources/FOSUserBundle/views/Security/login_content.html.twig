@@ -1,7 +1,7 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-<div class="row justify-content-md-center">
-    <div class="col-4">
+<div class="row justify-content-center">
+    <div class="col-10 col-md-4">
         <h3>Zaloguj się</h3>
         {% if error %}
             <div class="text-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -28,7 +28,7 @@
             <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}"
                    class="btn btn-primary btn-raised"/>
 
-            <a class="nav-link" href="{{ path('fos_user_registration_register') }}">Rejestracja</a>
         </form>
+        <a class="nav-link" href="{{ path('fos_user_registration_register') }}">Rejestracja</a>
     </div>
 </div>

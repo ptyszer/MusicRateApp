@@ -1,7 +1,7 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-<div class="row justify-content-md-center">
-    <div class="col-4">
+<div class="row justify-content-center">
+    <div class="col-10 col-md-4">
         <h3>Utwórz konto</h3>
         {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
         <div class="form-group">
@@ -28,5 +28,6 @@
             <input type="submit" value="{{ 'registration.submit'|trans }}" class="btn btn-primary btn-raised"/>
         </div>
         {{ form_end(form) }}
+        <a class="nav-link" href="{{ path('fos_user_security_login') }}">Zaloguj się</a>
     </div>
 </div>
