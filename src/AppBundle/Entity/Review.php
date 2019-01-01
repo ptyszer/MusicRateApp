@@ -33,7 +33,7 @@ class Review
      * @var int
      *
      * @ORM\Column(name="rating", type="integer")
-     * @Assert\Type("integer")
+     * @Assert\Type("float")
      * @Assert\NotBlank()
      * @Assert\Range(
      *      min = 1,
