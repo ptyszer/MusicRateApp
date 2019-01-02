@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Album;
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Genre;
+use AppBundle\Entity\Review;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -16,11 +17,13 @@ class MainController extends Controller
     /**
      * @Route("/", methods={"GET"}, name="homepage")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        // replace this example code with whatever you need
+        $reviews = $this->getDoctrine()->getRepository(Review::class)->findLatest();
+//        dump($reviews);die();
         return $this->render('main/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            'reviews' => $reviews
         ]);
     }
 

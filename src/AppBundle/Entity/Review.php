@@ -57,6 +57,13 @@ class Review
     private $creationDate;
 
     /**
+     * @var datetime
+     *
+     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
+     */
+    private $lastEdit;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Album", inversedBy="reviews")
      * @ORM\JoinColumn(name="album_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -181,5 +188,21 @@ class Review
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getLastEdit()
+    {
+        return $this->lastEdit;
+    }
+
+    /**
+     * @param \DateTime $lastEdit
+     */
+    public function setLastEdit($lastEdit)
+    {
+        $this->lastEdit = $lastEdit;
     }
 }

@@ -41,8 +41,10 @@ class ReviewController extends Controller
             if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
                 return $this->redirectToRoute('fos_user_security_login');
             }
+            $date = new \DateTime();
             $review->setAlbum($album);
             $review->setUser($user);
+            $review->setLastEdit($date);
             $em = $this->getDoctrine()->getManager();
             $em->persist($review);
             $em->flush();

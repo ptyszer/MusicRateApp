@@ -1,6 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block container %}
-    <h1>Homepage</h1>
+    <h5>Najnowsza aktywność:</h5>
+    <ul class="list-group">
+        {% for review in reviews %}
+            <li class="media mb-3">
+                {#<img class="mr-3" src="..." alt="Generic placeholder image">#}
+                {% if review.album.image %}
+                    <img class="mr-3"
+                         src="{{ cloudinary_url(review.album.image, {'width': 64, 'height': 64, 'crop': 'fill'}) }}"
+                         alt="album image"
+                    >
+                {% else %}
+                    <img class="mr-3" src="{{ asset('default-image.jpg') }}" alt="album image" width="64" height="64">
+                {% endif %}
+                <div class="media-body">
+                    <h6 class="mt-0 mb-1">
+                        {{ review.user }} ocenił album
+                        <a href="{{ path('album_show', { 'id': review.album.id }) }}">{{ review.album.name }}</a>
+                        na {{ review.rating }}
+                        <i class="fa fa-star" style="color: #e3cf7a"></i>
+                    </h6>
+                    <i>{{ review.comment }}</i>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
 
