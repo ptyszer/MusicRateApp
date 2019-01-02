@@ -2,32 +2,32 @@
 
 {% block title %}Albumy - MusicRate{% endblock %}
 {% block container %}
-    <h4>Albumy</h4>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Tytuł</th>
-            <th scope="col">Wykonawca</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for album in albums %}
-            <tr>
-                <td>
-                    <a href="{{ path('album_show', { 'id': album.id }) }}">
-                        {{ album.name }}
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('artist_show', { 'id': album.artist.id }) }}">
-                        {{ album.artist.name }}
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h4>Albumy</h4>
+            {% for album in albums %}
+                <a href="{{ path('album_show', { 'id': album.id }) }}" style="text-decoration: none">
+                    <div class="card mb-3" style="width: 25rem;">
+                        <div class="row no-gutters">
+                            <div class="col-3">
+                                {% if album.image %}
+                                    <img class="card-img-bottom"
+                                         src="{{ cloudinary_url(album.image, {'crop': 'fill'}) }}" alt="album image"
+                                         width="100%">
+                                {% else %}
+                                    <img src="{{ asset('default-image.jpg') }}" alt="album image" width="100%">
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                <div class="card-block px-2">
+                                    <p class="card-title" style="font-size: 1.2rem;">{{ album.name }}</p>
+                                    <p class="card-subtitle text-muted">{{ album.artist.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

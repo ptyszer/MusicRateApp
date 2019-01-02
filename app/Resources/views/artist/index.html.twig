@@ -2,30 +2,22 @@
 
 {% block title %}Wykonawcy - MusicRate{% endblock %}
 {% block container %}
-    <h4>Wykonawcy</h4>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Nazwa</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="card-columns">
         {% for artist in artists %}
-            <tr>
-                <td>
-                    <a href="{{ path('artist_show', { 'id': artist.id }) }}">
-                        {{ artist.name }}
-                    </a>
-                </td>
-            </tr>
+            <a href="{{ path('artist_show', { 'id': artist.id }) }}" style="text-decoration: none">
+                <div class="card" style="width: 18rem;">
+                    {% if artist.image %}
+                        <img class="card-img-top"
+                             src="{{ cloudinary_url(artist.image, {'height': 300, 'width': 500, 'crop': 'fill'}) }}"
+                             alt="artist image" width="100%">
+                    {% else %}
+                        <img height="" src="{{ asset('default-artist.jpg') }}" alt="album image" width="100%">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ artist.name }}</h5>
+                    </div>
+                </div>
+            </a>
         {% endfor %}
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('artist_new') }}">Dodaj nowego wykonawcę</a>
-        </li>
-    </ul>
+    </div>
 {% endblock %}
