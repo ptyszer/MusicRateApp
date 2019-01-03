@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ genre.name }} - MusicRate {% endblock %}
+{% block title %} {{ genre.name }} - {% endblock %}
 {% block container %}
     {% if genre.public == false %}
         <h5 class="text-warning">Ten wpis nie jest jeszcze zatwierdzony przez administratora i nie jest widoczny dla innych użytkowników.</h5>

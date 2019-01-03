@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ album.name }} - MusicRate{% endblock %}
+{% block title %} {{ album.name }} - {% endblock %}
 {% block container %}
     {% if album.public == false %}
         <h5 class="text-warning">Wpis o tym albumie nie jest jeszcze zatwierdzony przez administratora i nie jest widoczny dla innych użytkowników.</h5>
