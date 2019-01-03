@@ -2,6 +2,7 @@
 
 {% block title %}Wykonawcy - MusicRate{% endblock %}
 {% block container %}
+    <a href="{{ path('artist_new') }}" class="btn btn-primary"><i class="fas fa-plus-square"></i> Dodaj nowego wykonawcę</a>
     <div class="card-columns">
         {% for artist in artists %}
             <a href="{{ path('artist_show', { 'id': artist.id }) }}" style="text-decoration: none">

@@ -32,12 +32,10 @@
                     <i>Ten artysta nie ma jeszcze dodanych albumów...</i>
                 {% endfor %}
             </ul>
-            {% if is_granted('IS_AUTHENTICATED_FULLY') and artist.public %}
-                <ul>
-                    <li>
-                        <a href="{{ path('album_new', { 'artistId': artist.id }) }}">Dodaj nowy album</a>
-                    </li>
-                </ul>
+            {% if artist.public %}
+                <a href="{{ path('album_new', { 'artistId': artist.id }) }}" class="btn btn-primary">
+                    <i class="fas fa-plus-square"></i> Dodaj nowy album
+                </a>
             {% endif %}
 
             {% if is_granted('ROLE_ADMIN') %}
