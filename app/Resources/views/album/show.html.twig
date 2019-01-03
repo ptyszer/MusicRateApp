@@ -52,9 +52,6 @@
                 </tr>
                 </tbody>
             </table>
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('album_edit', { 'id': album.id }) }}">Edytuj</a>
-            {% endif %}
         </div>
     </div>
     <div class="row justify-content-center justify-content-md-start">

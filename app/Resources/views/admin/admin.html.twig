@@ -21,7 +21,7 @@
                 {% for artist in artists %}
                     <tr>
                         <td>
-                            <a href="{{ path('artist_edit', { 'id': artist.id }) }}">
+                            <a href="{{ path('artist_show', { 'id': artist.id }) }}">
                                 {{ artist.name }}
                             </a>
                         </td>
@@ -48,7 +48,7 @@
                 {% for album in albums %}
                     <tr>
                         <td>
-                            <a href="{{ path('album_edit', { 'id': album.id }) }}">
+                            <a href="{{ path('album_show', { 'id': album.id }) }}">
                                 {{ album.name }} ({{ album.artist.name }})
                             </a>
                         </td>
@@ -74,7 +74,7 @@
                 <tbody>
                 {% for genre in genres %}
                     <tr>
-                        <td><a href="{{ path('genre_edit', { 'id': genre.id }) }}">{{ genre.name }}</a></td>
+                        <td><a href="{{ path('genre_show', { 'id': genre.id }) }}">{{ genre.name }}</a></td>
                         <td>{{ genre.addedBy }}</td>
                     </tr>
                 {% endfor %}
