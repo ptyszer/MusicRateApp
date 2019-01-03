@@ -9,5 +9,6 @@ As a logged in user you can also add album reviews, you can only rate a given al
 
 The administrator can add, edit and delete all resources.
 
+[Live Demo](http://68.183.76.204 "MusicRating")
 
 A Symfony project created on May 13, 2018, 8:24 pm.
