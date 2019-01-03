@@ -44,10 +44,10 @@ class Artist implements ItemInterface
     /**
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      * @Assert\Image(
-     *     minWidth = 100,
-     *     maxWidth = 800,
-     *     minHeight = 100,
-     *     maxHeight = 800
+     *     minWidth = 300,
+     *     maxWidth = 1200,
+     *     minHeight = 200,
+     *     maxHeight = 1200
      * )
      */
     private $image;
