@@ -9,7 +9,6 @@ As a logged in user you can also add album reviews, you can only rate a given al
 
 The administrator can add, edit and delete all resources.
 
-[Live Demo](http://musicrating.pl/ "MusicRating")
 
 ![alt text](https://res.cloudinary.com/przemocloud/image/upload/v1546542204/musi-rating1.png)
 
